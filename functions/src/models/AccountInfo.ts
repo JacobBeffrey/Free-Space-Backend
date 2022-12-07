@@ -5,4 +5,5 @@ export default interface AccountInfo {
   email: string;
   loggedIn: boolean;
   _id?: ObjectId;
+  uid: string;
 }
