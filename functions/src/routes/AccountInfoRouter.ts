@@ -45,7 +45,7 @@ accountInfoRouter.put("/:id", async (req, res) => {
     errorResponse(err, res);
   }
 });
-
+//create a new account
 accountInfoRouter.post("/", async (req, res) => {
   const newUserAccount: AccountInfo = req.body;
   try {
