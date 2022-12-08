@@ -1,4 +1,5 @@
 import express from "express";
+import { ObjectId } from "mongodb";
 import { getClient } from "../db";
 import AccountInfo from "../models/AccountInfo";
 
@@ -17,6 +18,29 @@ accountInfoRouter.get("/:uid", async (req, res) => {
       .findOne({ uid: uidParams });
     const results = await cursor;
     res.json(results);
+  } catch (err) {
+    errorResponse(err, res);
+  }
+});
+
+accountInfoRouter.put("/:id", async (req, res) => {
+  const idParams = req.params.id;
+  const updatedAccount = req.body;
+  delete updatedAccount._id;
+  try {
+    const client = await getClient();
+    const cursor = client
+      .db()
+      .collection<AccountInfo>("login")
+      .replaceOne({ _id: new ObjectId(idParams) }, updatedAccount);
+    const results = await cursor;
+    if (results.modifiedCount > 0) {
+      updatedAccount._id = new ObjectId(idParams);
+      res.json(updatedAccount);
+    } else {
+      res.status(404);
+      res.json({ message: "ID not found" });
+    }
   } catch (err) {
     errorResponse(err, res);
   }
